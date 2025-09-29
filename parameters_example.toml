@@ -1,0 +1,8 @@
+project_name = 'test1'
+
+[remote]
+endpoint_url = 'https://s3.ca-west-1.s4.mega.io'
+access_key_id = ''
+access_key = ''
+bucket = 'data'
+base_path = 'wrf/'
