@@ -26,9 +26,9 @@ classifiers = [
 ]
 dependencies = [
   'h5netcdf==1.6.3',
-  'numpy==2.2.6',
+  # 'numpy==2.2.6',
   'f90nml==1.4.5',
-  's3func==0.7.2',
+  # 's3func==0.7.2',
   ]
 
 [dependency-groups]
