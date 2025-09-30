@@ -9,6 +9,8 @@ import tomllib
 import os
 import pathlib
 import f90nml
+import shlex
+import subprocess
 
 ############################################
 ### Read params file
@@ -38,14 +40,11 @@ geogrid_exe = wps_path.joinpath('geogrid.exe')
 ###########################################
 ### Others
 
-# data_path = pathlib.Path(file['input_data']['data_path'])
-
 data_path = pathlib.Path('/data')
 
-# wps_nml_path = pathlib.Path(file['namelists']['wps_path'])
-# wrf_nml_path = pathlib.Path(file['namelists']['wrf_path'])
+wps_nml_path = pathlib.Path('/namelist.wps')
+wrf_nml_path = pathlib.Path('/namelist.input')
 
-wps_nml_path = base_path.joinpath('namelist.wps')
 
 ##########################################
 ### ERA5
@@ -80,7 +79,43 @@ wps_nml_path = base_path.joinpath('namelist.wps')
 #     ]
 
 
+#######################################################
+### Functions
 
+
+def create_rclone_config(name, data_path, access_key_id, access_key, endpoint_url, download_url=None):
+    """
+
+    """
+    config_dict = {}
+    if isinstance(download_url, str) or 'backblazeb2' in endpoint_url:
+        type_ = 'b2'
+        # config_dict['type'] = 'b2'
+        config_dict['account'] = access_key_id
+        config_dict['key'] = access_key
+        config_dict['hard_delete'] = 'true'
+        if isinstance(download_url, str):
+            config_dict['download_url'] = download_url
+    else:
+        type_ = 's3'
+        # config_dict['type'] = 's3'
+        if 'mega' in endpoint_url:
+            provider = 'Mega'
+        else:
+            provider = 'Other'
+        config_dict['provider'] = provider
+        config_dict['access_key_id'] = access_key_id
+        config_dict['secret_access_key'] = access_key
+        config_dict['endpoint'] = endpoint_url
+
+    config_list = [f'{k}={v}' for k, v in config_dict.items()]
+    config_str = ' '.join(config_list)
+    config_path = data_path.joinpath('rclone.config')
+    cmd_str = f'rclone config create {name} {type_} {config_str} --config={config_path} --non-interactive --obscure'
+    cmd_list = shlex.split(cmd_str)
+    p = subprocess.run(cmd_list, capture_output=True, text=True, check=True)
+
+    return config_path
 
 
 

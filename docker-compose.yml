@@ -6,6 +6,7 @@ services:
     # user: ${MY_UID}:${MY_GID}
     volumes:
         - "~/git/wrf-repos/wrf-testing/preprocessing/geogrid/parameters.toml:/parameters.toml"
-        - '~/git/wrf-repos/wrf-testing/namelists/namelist_uc_v02b.wps:/namelist.wps'
+        - '~/git/wrf-repos/wrf-testing/namelists/namelist_uc_v02a.wps:/namelist.wps'
+        - '~/git/wrf-repos/wrf-testing/namelists/namelist_uc_v02a.input:/namelist.input'
         - '~/Build_WRF/WPS_GEOG:/WPS_GEOG'
 
