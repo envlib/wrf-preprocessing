@@ -29,7 +29,7 @@
  output_diagnostics                  = 1, ! set to =1 to add 48 sfc diagnostic arrays (max/min/mean/std) in the specified time interval in auxhist3_interval
  auxhist3_outname                    = "wrfxtrm_d<domain>_<date>.nc",
  io_form_auxhist3                    = 2,
- auxhist3_interval                   = 1440, 1440, 1440, 1440,
+ auxhist3_interval                   = 0, 0, 0, 0,
  frames_per_auxhist3                 = 200, 200, 200, 200, 
 /
 

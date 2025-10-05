@@ -1,0 +1,22 @@
+[time_control]
+interval_seconds = 21600 # time interval between incoming data from the time series data, which is the interval (secs) between times in the lateral boundary condition file
+
+[time_control.history_file]
+history_interval = [180, 180, 60] # The interval in minutes that the output should be written out for each domain
+history_begin = 0 # Number of mins from the start of the run in which the history output file (wrfout) is written
+n_hours_per_file = 24
+history_outname = "wrfout_d<domain>_<date>.nc"
+
+[time_control.summary_file]
+output_diagnostics = 0 # A value of 1 makes the output
+auxhist3_outname = "wrfxtrm_d<domain>_<date>.nc"
+auxhist3_interval = 1440 # Number of minutes to output
+n_hours_per_file = 240
+
+[remote]
+type = 's3'
+provider = 'Mega'
+endpoint = 'https://s3.ca-west-1.s4.mega.io'
+access_key_id = ''
+secret_access_key = ''
+path = '/data/wrf/test1/'

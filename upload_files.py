@@ -29,26 +29,21 @@ def upload_files():
     """
 
     """
-    proj_path = pathlib.Path(remote['project_path'])
+    proj_path = pathlib.Path(remote.opo('path'))
 
-    access_key_id = remote['access_key_id']
-    access_key = remote['access_key']
-    bucket = remote['bucket']
-    endpoint_url = remote['endpoint_url']
+    config_path = params.create_rclone_config('ul', params.data_path, remote)
 
-    config_path = params.create_rclone_config('s3', params.data_path, access_key_id, access_key, endpoint_url)
-
-    dst_str = f's3:{bucket}/{proj_path}/'
+    dst_str = f'ul:{proj_path}/'
     cmd_str = f'rclone copy {params.data_path} {dst_str} --config={config_path} --exclude="rclone.config"'
     cmd_list = shlex.split(cmd_str)
-    p = subprocess.run(cmd_list, capture_output=True, text=True, check=True)
+    p = subprocess.run(cmd_list, capture_output=True, text=True, check=False)
     for file_path in params.data_path.iterdir():
         if file_path.is_file():
             file_path.unlink()
     if p.stderr != '':
-        return print(p.stderr)
+        raise ValueError(p.stderr)
     else:
-        return print('success')
+        return True
 
 
 
