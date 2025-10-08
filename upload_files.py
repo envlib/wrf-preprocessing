@@ -7,6 +7,7 @@ Created on Mon Sep 29 15:06:19 2025
 """
 # import s3func
 # import concurrent.futures
+import copy
 import pathlib
 import shlex
 import subprocess
@@ -18,8 +19,6 @@ import params
 ############################################
 ### Parameters
 
-remote = params.file['remote']
-
 
 ###########################################
 ### Functions
@@ -29,7 +28,9 @@ def upload_files():
     """
 
     """
-    proj_path = pathlib.Path(remote.opo('path'))
+    remote = copy.deepcopy(params.file['remote'])
+
+    proj_path = pathlib.Path(remote.pop('path'))
 
     config_path = params.create_rclone_config('ul', params.data_path, remote)
 
