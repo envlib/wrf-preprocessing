@@ -157,7 +157,11 @@ def check_set_params():
     wrf_nml['time_control']['frames_per_outfile'] = frames_per_outfile
     wrf_nml['time_control']['history_begin'] = params.file['time_control']['history_file']['history_begin']
     wrf_nml['time_control']['history_outname'] = params.file['time_control']['history_file']['history_outname']
-    
+
+    ## Output precip rate to history file
+    wps_nml['share']['prec_acc_dt'] = history_interval
+
+    ## Other output files
     summ_file = params.file['time_control']['summary_file']
     output_diagnostics = summ_file['output_diagnostics']
     
@@ -173,7 +177,22 @@ def check_set_params():
         wrf_nml['time_control']['frames_per_auxhist3'] = [int(n_hours_per_file/hours)] * n_domains
     
         wrf_nml['time_control']['auxhist3_outname'] = summ_file['auxhist3_outname']
+        wrf_nml['time_control']['io_form_auxhist3'] = 2
+
+    z_level_file = params.file['time_control']['z_level_file']
+    z_level_flag = summ_file['z_lev_diags']
     
+    wrf_nml['diags']['z_lev_diags'] = z_level_flag
+
+    if z_level_flag == 1:
+        wrf_nml['diags']['z_levels'] = z_level_file['z_levels']
+        wrf_nml['diags']['num_z_levels'] = len(z_level_file['z_levels'])
+
+        wrf_nml['time_control']['auxhist22_outname'] = [-z for z in z_level_file['auxhist22_outname']]
+        wrf_nml['time_control']['io_form_auxhist22'] = 2
+        wrf_nml['time_control']['auxhist22_interval'] = history_interval
+        wrf_nml['time_control']['frames_per_auxhist22'] = frames_per_outfile
+
     ## Domains - namelist.wps copied to namelist.input
     for k, v in wps_domains.items():
         if k in wrf_domains:
