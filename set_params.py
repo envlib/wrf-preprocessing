@@ -153,10 +153,12 @@ def check_set_params():
     for hi in history_interval:
         hours = int(hi/60)
         frames_per_outfile.append(int(n_hours_per_file/hours))
-    
+
+    history_begin = params.file['time_control']['history_file']['history_begin']
+
     wrf_nml['time_control']['frames_per_outfile'] = frames_per_outfile
-    wrf_nml['time_control']['history_begin'] = params.file['time_control']['history_file']['history_begin']
-    wrf_nml['time_control']['history_outname'] = params.file['time_control']['history_file']['history_outname']
+    wrf_nml['time_control']['history_begin'] = [history_begin] * n_domains
+    wrf_nml['time_control']['history_outname'] = params.history_outname
 
     ## Output precip rate to history file
     wrf_nml['physics']['prec_acc_dt'] = history_interval
@@ -176,8 +178,9 @@ def check_set_params():
     
         wrf_nml['time_control']['frames_per_auxhist3'] = [int(n_hours_per_file/hours)] * n_domains
     
-        wrf_nml['time_control']['auxhist3_outname'] = summ_file['auxhist3_outname']
+        wrf_nml['time_control']['auxhist3_outname'] = params.summ_outname
         wrf_nml['time_control']['io_form_auxhist3'] = 2
+        wrf_nml['time_control']['auxhist3_begin'] = [params.file['time_control']['history_file']['history_begin']] * n_domains
 
     z_level_file = params.file['time_control']['z_level_file']
     z_level_flag = z_level_file['z_lev_diags']
@@ -188,10 +191,11 @@ def check_set_params():
         wrf_nml['diags']['z_levels'] = [-z for z in z_level_file['z_levels']]
         wrf_nml['diags']['num_z_levels'] = len(z_level_file['z_levels'])
 
-        wrf_nml['time_control']['auxhist22_outname'] = z_level_file['auxhist22_outname']
+        wrf_nml['time_control']['auxhist22_outname'] = params.zlevel_outname
         wrf_nml['time_control']['io_form_auxhist22'] = 2
         wrf_nml['time_control']['auxhist22_interval'] = history_interval
         wrf_nml['time_control']['frames_per_auxhist22'] = frames_per_outfile
+        wrf_nml['time_control']['auxhist22_begin'] = [params.file['time_control']['history_file']['history_begin']] * n_domains
 
     ## Domains - namelist.wps copied to namelist.input
     for k, v in wps_domains.items():

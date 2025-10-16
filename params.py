@@ -45,6 +45,10 @@ data_path = pathlib.Path('/data')
 wps_nml_path = pathlib.Path('/namelist.wps')
 wrf_nml_path = pathlib.Path('/namelist.input')
 
+history_outname = "wrfout_d<domain>_<date>.nc"
+summ_outname = "wrfxtrm_d<domain>_<date>.nc"
+zlevel_outname = 'wrfzlevels_d<domain>_<date>.nc'
+
 
 ##########################################
 ### ERA5
