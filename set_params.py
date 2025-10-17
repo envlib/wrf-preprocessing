@@ -147,8 +147,9 @@ def check_set_params():
     
     wrf_nml['time_control']['history_interval'] = history_interval
     
-    n_hours_per_file = params.file['time_control']['history_file']['n_hours_per_file']
-    
+    # n_hours_per_file = params.file['time_control']['history_file']['n_hours_per_file']
+    n_hours_per_file = 24 # It's now hard coded due to issues of running a day without an extra single timestamp file at the end
+
     frames_per_outfile = []
     for hi in history_interval:
         hours = int(hi/60)
@@ -170,13 +171,18 @@ def check_set_params():
     wrf_nml['time_control']['output_diagnostics'] = output_diagnostics
     
     if output_diagnostics == 1:
-        wrf_nml['time_control']['auxhist3_interval'] = [summ_file['auxhist3_interval']] * n_domains
+        diag_interval = summ_file['auxhist3_interval']
+
+        if diag_interval % (60*24) != 0:
+            raise ValueError('auxhist3_interval must be an interval of a day.')
+
+        wrf_nml['time_control']['auxhist3_interval'] = [diag_interval] * n_domains
     
-        n_hours_per_file = summ_file['n_hours_per_file']
+        n_days_per_file = summ_file['n_days_per_file']
     
-        hours = int(summ_file['auxhist3_interval']/60)
+        days = int(diag_interval/60/24)
     
-        wrf_nml['time_control']['frames_per_auxhist3'] = [int(n_hours_per_file/hours)] * n_domains
+        wrf_nml['time_control']['frames_per_auxhist3'] = [int(n_days_per_file/days)] * n_domains
     
         wrf_nml['time_control']['auxhist3_outname'] = params.summ_outname
         wrf_nml['time_control']['io_form_auxhist3'] = 2
